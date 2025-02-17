@@ -1,115 +1,113 @@
-// Smooth Scroll to sections when navigation links are clicked
-document.querySelectorAll('nav ul li a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+    // Create chat button
+    let chatButton = document.createElement("div");
+    chatButton.innerHTML = "💬";
+    chatButton.style.position = "fixed";
+    chatButton.style.bottom = "20px";
+    chatButton.style.right = "20px";
+    chatButton.style.backgroundColor = "#007bff";
+    chatButton.style.color = "white";
+    chatButton.style.borderRadius = "50%";
+    chatButton.style.width = "50px";
+    chatButton.style.height = "50px";
+    chatButton.style.display = "flex";
+    chatButton.style.alignItems = "center";
+    chatButton.style.justifyContent = "center";
+    chatButton.style.fontSize = "24px";
+    chatButton.style.cursor = "pointer";
+    chatButton.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
+    document.body.appendChild(chatButton);
 
-        const targetId = e.target.getAttribute('href').slice(1);
-        const targetElement = document.getElementById(targetId);
+    // Create chat window
+    let chatWindow = document.createElement("div");
+    chatWindow.style.position = "fixed";
+    chatWindow.style.bottom = "80px";
+    chatWindow.style.right = "20px";
+    chatWindow.style.width = "300px";
+    chatWindow.style.height = "400px";
+    chatWindow.style.backgroundColor = "white";
+    chatWindow.style.border = "1px solid #ddd";
+    chatWindow.style.borderRadius = "10px";
+    chatWindow.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
+    chatWindow.style.display = "none";
+    chatWindow.style.flexDirection = "column";
+    chatWindow.style.overflow = "hidden";
+    document.body.appendChild(chatWindow);
 
-        window.scrollTo({
-            top: targetElement.offsetTop - 60, 
-            behavior: 'smooth'
-        });
+    // Chat header
+    let chatHeader = document.createElement("div");
+    chatHeader.innerText = "Chatbot";
+    chatHeader.style.backgroundColor = "#007bff";
+    chatHeader.style.color = "white";
+    chatHeader.style.padding = "10px";
+    chatHeader.style.textAlign = "center";
+    chatHeader.style.fontWeight = "bold";
+    chatWindow.appendChild(chatHeader);
+
+    // Chat messages container
+    let chatMessages = document.createElement("div");
+    chatMessages.style.flex = "1";
+    chatMessages.style.padding = "10px";
+    chatMessages.style.overflowY = "auto";
+    chatMessages.style.height = "300px";
+    chatWindow.appendChild(chatMessages);
+
+    // Chat input
+    let chatInputContainer = document.createElement("div");
+    chatInputContainer.style.display = "flex";
+    chatInputContainer.style.padding = "10px";
+    chatWindow.appendChild(chatInputContainer);
+
+    let chatInput = document.createElement("input");
+    chatInput.type = "text";
+    chatInput.placeholder = "Type a message...";
+    chatInput.style.flex = "1";
+    chatInput.style.padding = "5px";
+    chatInput.style.border = "1px solid #ddd";
+    chatInput.style.borderRadius = "5px";
+    chatInputContainer.appendChild(chatInput);
+
+    let sendButton = document.createElement("button");
+    sendButton.innerText = "Send";
+    sendButton.style.marginLeft = "5px";
+    sendButton.style.padding = "5px 10px";
+    sendButton.style.border = "none";
+    sendButton.style.backgroundColor = "#007bff";
+    sendButton.style.color = "white";
+    sendButton.style.borderRadius = "5px";
+    sendButton.style.cursor = "pointer";
+    chatInputContainer.appendChild(sendButton);
+
+    // Toggle chat window
+    chatButton.addEventListener("click", function () {
+        chatWindow.style.display = chatWindow.style.display === "none" ? "flex" : "none";
     });
-});
 
+    // Chatbot responses
+    sendButton.addEventListener("click", function () {
+        let userMessage = chatInput.value.trim();
+        if (userMessage === "") return;
 
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('nav ul li a');
+        let userBubble = document.createElement("div");
+        userBubble.innerText = userMessage;
+        userBubble.style.backgroundColor = "#007bff";
+        userBubble.style.color = "white";
+        userBubble.style.padding = "5px";
+        userBubble.style.borderRadius = "5px";
+        userBubble.style.margin = "5px 0";
+        userBubble.style.alignSelf = "flex-end";
+        chatMessages.appendChild(userBubble);
 
-window.addEventListener('scroll', () => {
-    let currentSection = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (pageYOffset >= sectionTop - 100) { 
-            currentSection = section.getAttribute('id');
-        }
+        chatInput.value = "";
+        setTimeout(() => {
+            let botBubble = document.createElement("div");
+            botBubble.innerText = "Hello! How can I help you?";
+            botBubble.style.backgroundColor = "#f1f1f1";
+            botBubble.style.padding = "5px";
+            botBubble.style.borderRadius = "5px";
+            botBubble.style.margin = "5px 0";
+            botBubble.style.alignSelf = "flex-start";
+            chatMessages.appendChild(botBubble);
+        }, 1000);
     });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === currentSection) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Download CV Button -
-document.querySelectorAll('.btn-primary').forEach(button => {
-    if (button.innerHTML.includes('Download CV')) {
-        button.addEventListener('click', () => {
-            alert('CV download initiated!');
-        });
-    }
-});
-
-// Handle Contact Form Submission (Simple form validation)
-const contactForm = document.querySelector('footer form');
-const contactMessageInput = contactForm.querySelector('textarea');
-const contactNameInput = contactForm.querySelector('input[type="text"]');
-const contactEmailInput = contactForm.querySelector('input[type="email"]');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = contactNameInput.value.trim();
-    const email = contactEmailInput.value.trim();
-    const message = contactMessageInput.value.trim();
-
-    if (name === '' || email === '' || message === '') {
-        alert('Please fill out all fields.');
-    } else if (!validateEmail(email)) {
-        alert('Please enter a valid email address.');
-    } else {
-      
-        alert('Thank you for contacting me! I will get back to you soon.');
-
-        contactForm.reset();
-    }
-});
-
-
-function validateEmail(email) {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-}
-const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-};
-
-const observerCallback = (entries, observer) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible'); 
-        }
-    });
-};
-
-const animateElements = document.querySelectorAll('.section-title, .section-description, .skill, .experience');
-const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-animateElements.forEach(element => {
-    observer.observe(element);
-});
-
-const backToTopButton = document.createElement('button');
-backToTopButton.classList.add('back-to-top');
-backToTopButton.innerHTML = '↑';
-document.body.appendChild(backToTopButton);
-
-backToTopButton.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
-
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        backToTopButton.style.display = 'block';
-    } else {
-        backToTopButton.style.display = 'none';
-    }
 });
